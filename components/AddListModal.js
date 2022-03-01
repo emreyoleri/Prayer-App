@@ -10,9 +10,8 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "../Colors";
-import tempData from "../tempData";
 
-const AddListModal = ({ closeModal }) => {
+const AddListModal = ({ closeModal, addList }) => {
   const buttonColors = [
     "#5CD859",
     "#24A6D9",
@@ -27,12 +26,9 @@ const AddListModal = ({ closeModal }) => {
   const [color, setColor] = React.useState(buttonColors[0]);
 
   const createTodo = () => {
-    tempData.push({
-      name,
-      color,
-      todos: [],
-    });
+    const list = { name, color };
 
+    addList(list);
     setName("");
     closeModal();
   };

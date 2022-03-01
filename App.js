@@ -13,16 +13,24 @@ import Colors from "./Colors";
 import tempData from "./tempData";
 import TodoList from "./components/TodoList";
 import AddListModal from "./components/AddListModal";
-import { StatusBar } from "expo-status-bar";
 
 export default function App() {
   const [addTodoVisible, setAddTodoVisible] = React.useState(false);
+  const [lists, setLists] = React.useState(tempData);
 
   const toogleAddTodoVisible = () => setAddTodoVisible(!addTodoVisible);
 
   const toogleAddTodoModal = () => setAddTodoVisible(false);
 
-  const renderList = (list) => <TodoList list={list} />;
+  const renderList = (list) => <TodoList list={list} updateList={updateList} />;
+
+  const addList = (list) => {
+    setLists([...lists, { ...list, id: lists.length + 1, todos: [] }]);
+  };
+
+  const updateList = (list) => {
+    setLists([...lists.map((item) => (item.id === list.id ? list : item))]);
+  };
 
   return (
     <View style={styles.container}>
@@ -31,7 +39,7 @@ export default function App() {
         visible={addTodoVisible}
         onRequestClose={toogleAddTodoModal}
       >
-        <AddListModal closeModal={toogleAddTodoModal} />
+        <AddListModal closeModal={toogleAddTodoModal} addList={addList} />
       </Modal>
       <View style={{ flexDirection: "row" }}>
         <View style={styles.divider} />
@@ -50,11 +58,12 @@ export default function App() {
       </View>
       <View style={{ height: 275, paddingLeft: 32 }}>
         <FlatList
-          data={tempData}
+          data={lists}
           keyExtractor={(item) => item.name}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => renderList(item)}
+          keyboardShouldPersistTaps="always"
         />
       </View>
     </View>

@@ -3,7 +3,7 @@ import React from "react";
 import Colors from "../Colors";
 import TodoModal from "./TodoModal";
 
-const TodoList = ({ list }) => {
+const TodoList = ({ list, updateList }) => {
   const [showListVisible, setShowListVisible] = React.useState(false);
 
   const toogleListModal = () => setShowListVisible(!showListVisible);
@@ -17,7 +17,11 @@ const TodoList = ({ list }) => {
         visible={showListVisible}
         onRequestClose={toogleListModal}
       >
-        <TodoModal list={list} closeModal={toogleListModal} />
+        <TodoModal
+          list={list}
+          closeModal={toogleListModal}
+          updateList={updateList}
+        />
       </Modal>
       <TouchableOpacity
         style={[styles.listContainer, { backgroundColor: list.color }]}
