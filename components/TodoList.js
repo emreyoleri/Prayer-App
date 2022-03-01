@@ -1,25 +1,42 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Modal } from "react-native";
 import React from "react";
 import Colors from "../Colors";
+import TodoModal from "./TodoModal";
 
 const TodoList = ({ list }) => {
+  const [showListVisible, setShowListVisible] = React.useState(false);
+
+  const toogleListModal = () => setShowListVisible(!showListVisible);
+
   const completedCount = list.todos.filter((todo) => todo.completed).length;
   const remainingCount = list.todos.length - completedCount;
   return (
-    <View style={[styles.listContainer, { backgroundColor: list.color }]}>
-      <Text style={styles.listTitle} numberOfLines={1}>
-        {list.name}
-      </Text>
-      <View>
-        <View style={{ alignItems: "center" }}>
-          <Text style={styles.count}>{remainingCount}</Text>
-          <Text style={styles.subtitle}>Remaining</Text>
+    <View>
+      <Modal
+        animationType="slide"
+        visible={showListVisible}
+        onRequestClose={toogleListModal}
+      >
+        <TodoModal list={list} closeModal={toogleListModal} />
+      </Modal>
+      <TouchableOpacity
+        style={[styles.listContainer, { backgroundColor: list.color }]}
+        onPress={toogleListModal}
+      >
+        <Text style={styles.listTitle} numberOfLines={1}>
+          {list.name}
+        </Text>
+        <View>
+          <View style={{ alignItems: "center" }}>
+            <Text style={styles.count}>{remainingCount}</Text>
+            <Text style={styles.subtitle}>Remaining</Text>
+          </View>
+          <View style={{ alignItems: "center" }}>
+            <Text style={styles.count}>{completedCount}</Text>
+            <Text style={styles.subtitle}>Completed</Text>
+          </View>
         </View>
-        <View style={{ alignItems: "center" }}>
-          <Text style={styles.count}>{completedCount}</Text>
-          <Text style={styles.subtitle}>Completed</Text>
-        </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };

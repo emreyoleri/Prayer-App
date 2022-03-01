@@ -13,6 +13,7 @@ import Colors from "./Colors";
 import tempData from "./tempData";
 import TodoList from "./components/TodoList";
 import AddListModal from "./components/AddListModal";
+import { StatusBar } from "expo-status-bar";
 
 export default function App() {
   const [addTodoVisible, setAddTodoVisible] = React.useState(false);
@@ -20,6 +21,8 @@ export default function App() {
   const toogleAddTodoVisible = () => setAddTodoVisible(!addTodoVisible);
 
   const toogleAddTodoModal = () => setAddTodoVisible(false);
+
+  const renderList = (list) => <TodoList list={list} />;
 
   return (
     <View style={styles.container}>
@@ -51,7 +54,7 @@ export default function App() {
           keyExtractor={(item) => item.name}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => <TodoList list={item} />}
+          renderItem={({ item }) => renderList(item)}
         />
       </View>
     </View>
