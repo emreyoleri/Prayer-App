@@ -82,7 +82,7 @@ const TodoModal = ({ list, closeModal, updateList }) => {
           <FlatList
             data={todos}
             renderItem={({ item, index }) => renderTodo(item, index)}
-            keyExtractor={(item) => item.title}
+            keyExtractor={(_, index) => index.toString()}
             contentContainerStyle={{
               paddingHorizontal: 32,
               paddingVertical: 64,

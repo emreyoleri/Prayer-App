@@ -24,7 +24,10 @@ const TodoList = ({ list, updateList }) => {
         />
       </Modal>
       <TouchableOpacity
-        style={[styles.listContainer, { backgroundColor: list.color }]}
+        style={[
+          styles.listContainer,
+          { backgroundColor: list.color, borderRadius: 6 },
+        ]}
         onPress={toogleListModal}
       >
         <Text style={styles.listTitle} numberOfLines={1}>
@@ -49,12 +52,11 @@ export default TodoList;
 
 const styles = StyleSheet.create({
   listContainer: {
-    paddingVertical: 32,
-    paddingHorizontal: 16,
-    borderRadius: 6,
+    width: 200,
     marginHorizontal: 12,
     alignItems: "center",
-    width: 200,
+    paddingTop: 10,
+    paddingBottom: 20,
   },
   listTitle: {
     fontSize: 24,
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 20,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.white,
   },
 });
