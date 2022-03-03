@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,20 +8,21 @@ import {
   Modal,
   Alert,
   ActivityIndicator,
+  LogBox,
+  Image,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-
 import Colors from "./Colors";
-import tempData from "./tempData";
 import TodoList from "./components/TodoList";
 import AddListModal from "./components/AddListModal";
 import Fire from "./Firebase";
 
 export default function App() {
-  const [addTodoVisible, setAddTodoVisible] = React.useState(false);
-  const [lists, setLists] = React.useState(tempData);
-  const [user, setUser] = React.useState({});
-  const [loading, setLoading] = React.useState(true);
+  LogBox.ignoreAllLogs();
+  const [addTodoVisible, setAddTodoVisible] = useState(false);
+  const [lists, setLists] = useState([]);
+  const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let firebase = new Fire((error, user) => {
@@ -49,11 +50,15 @@ export default function App() {
   const renderList = (list) => <TodoList list={list} updateList={updateList} />;
 
   const addList = (list) => {
-    setLists([...lists, { ...list, id: lists.length + 1, todos: [] }]);
+    new Fire().addList({
+      name: list.name,
+      color: list.color,
+      todos: [],
+    });
   };
 
   const updateList = (list) => {
-    setLists([...lists.map((item) => (item.id === list.id ? list : item))]);
+    new Fire().updateList(list);
   };
 
   if (loading) {
@@ -72,10 +77,12 @@ export default function App() {
       >
         <AddListModal closeModal={toogleAddTodoModal} addList={addList} />
       </Modal>
-      <View>
-        <Text>{user?.uid}</Text>
-      </View>
-      <View style={{ flexDirection: "row" }}>
+
+      <View
+        style={{
+          flexDirection: "row",
+        }}
+      >
         <View style={styles.divider} />
         <Text style={styles.title}>
           Todo
@@ -90,7 +97,23 @@ export default function App() {
         </TouchableOpacity>
         <Text style={styles.add}>Add List</Text>
       </View>
-      <View style={{ height: 275, paddingLeft: 32 }}>
+      {lists.length === 0 && (
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            height: 250,
+            marginTop: -50,
+          }}
+        >
+          <Image source={require("./assets/no.jpg")} style={styles.image} />
+        </View>
+      )}
+      <View
+        style={{
+          height: lists.length > 0 ? 275 : 0,
+        }}
+      >
         <FlatList
           data={lists}
           keyExtractor={(item) => item.id.toString()}
@@ -136,5 +159,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 14,
     marginTop: 8,
+  },
+  image: {
+    width: 200,
+    height: 150,
   },
 });
