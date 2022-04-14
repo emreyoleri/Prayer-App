@@ -1,27 +1,23 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-
 const firebaseConfig = {
-  apiKey: "AIzaSyATgQU_GsQPuBa7IKUI8nKbO0VgNOBkmWo",
-  authDomain: "react-native-todo-app-645c5.firebaseapp.com",
-  projectId: "react-native-todo-app-645c5",
-  storageBucket: "react-native-todo-app-645c5.appspot.com",
-  messagingSenderId: "217628297584",
-  appId: "1:217628297584:web:c2ee7bb75f5aef9c0b27b5",
-  measurementId: "G-9VCNTK3CVT",
+  apiKey: "AIzaSyBN2uQ2YB9E36kb1mbMY54qK0qi2I6jKJw",
+  authDomain: "prayer-app-2.firebaseapp.com",
+  projectId: "prayer-app-2",
+  storageBucket: "prayer-app-2.appspot.com",
+  messagingSenderId: "535526149407",
+  appId: "1:535526149407:web:4749b8c6c2dbd4922d742a",
+  measurementId: "G-Z0H31PH161",
 };
-
 class Fire {
   constructor(callback) {
     this.init(callback);
   }
-
   init(callback) {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
-
     firebase.auth().onAuthStateChanged((user) => {
       if (user) callback(null, user);
       else {
@@ -34,47 +30,25 @@ class Fire {
       }
     });
   }
-
-  getLists(callback) {
-    let ref = this.ref.orderBy("name");
-
-    this.unsubscribe = ref.onSnapshot((snapshot) => {
-      lists = [];
-
+  getPrayers(callback) {
+    this.unsubscribe = this.ref.orderBy("order").onSnapshot((snapshot) => {
+      prayers = [];
       snapshot.forEach((doc) => {
-        lists.push({ id: doc.id, ...doc.data() });
+        prayers.push({ id: doc.id, ...doc.data() });
       });
-
-      callback(lists);
+      callback(prayers);
     });
   }
-
-  addList(list) {
+  addPrayer(prayer) {
     let ref = this.ref;
-
-    ref.add(list);
-  }
-
-  updateList(list) {
-    let ref = this.ref;
-    ref.doc(list.id).update(list);
-  }
-
-  get userId() {
-    return firebase.auth().currentUser.uid;
+    ref.add(prayer);
   }
 
   get ref() {
-    return firebase
-      .firestore()
-      .collection("users")
-      .doc(this.userId)
-      .collection("lists");
+    return firebase.firestore().collection("prayers");
   }
-
   detach() {
     this.unsubscribe();
   }
 }
-
 export default Fire;
